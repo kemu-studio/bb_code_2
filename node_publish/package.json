@@ -1,0 +1,16 @@
+{
+  "name": "bb2",
+  "version": "0.0.1",
+  "description": "BB Code 2.0 (aka KBB)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "BBCode",
+    "BB",
+    "kbb"
+  ],
+  "author": "Yosh Kemu <y@ke.mu> (http://yosh.ke.mu/)",
+  "license": "ISC"
+}
