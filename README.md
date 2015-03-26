@@ -38,4 +38,18 @@ I didn't publish PHP implementation yet - it's ongoing.
     
     npm install bb2
 
+Also make sure you have CoffeeScript installed globally (it's adviced to have CoffeeScript installed globally). If not:
+
+    npm install -g coffee-script
+
 ### Usage
+
+Quick usage:
+```
+BBCodeHtml = require('bb2').BBCodeHtml
+bb = new BBCodeHtml()
+console.log bb.parse('visible [0]invisible[1] [b]bold[/] [i]italic[/]')
+```
+
+For details go to http://doc.ke.mu/doc/bb
+
