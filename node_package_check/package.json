@@ -1,0 +1,14 @@
+{
+  "name": "node_package_check",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "coffee check.coffee"
+  },
+  "author": "Yosh Kemu <y@ke.mu> (http://yosh.ke.mu/)",
+  "license": "ISC",
+  "dependencies": {
+    "bb2": "0.0.5"
+  }
+}

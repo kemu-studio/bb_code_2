@@ -1,0 +1,16 @@
+{
+  "name": "bb2_dev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yosh Kemu <y@ke.mu> (http://yosh.ke.mu/)",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^0.16.5",
+    "mocha": "^2.2.1",
+    "should": "^5.2.0"
+  }
+}
