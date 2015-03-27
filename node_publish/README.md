@@ -29,20 +29,15 @@ Why not just:
 ## Quick example... more ?
 ...and a lot more. More examples of simplicity and smart parsing in [full BB2 documentation](http://doc.ke.mu/doc/bb/the_idea#simpleCode)
 
-# Implementation
-There are two implementations: for javascript (node.js) and for PHP.
-I didn't publish PHP implementation yet - it's ongoing.
-
-## KBB on node.js
-### Installation
+# Installation
 
     npm install bb2
 
-Also make sure you have CoffeeScript installed globally (it's adviced to have CoffeeScript installed globally). If not:
+Also make sure you have **CoffeeScript installed** globally (it's adviced to have CoffeeScript installed globally). If not:
 
     npm install -g coffee-script
 
-### Usage
+# Usage
 
 Quick usage:
 ```
@@ -51,5 +46,9 @@ bb = new BBCodeHtml()
 console.log bb.parse('visible [0]invisible[1] [b]bold[/] [i]italic[/]')
 ```
 
-For details go to http://doc.ke.mu/doc/bb
+For details go to [BB2 docs](http://doc.ke.mu/doc/bb)
+
+# Sources
+
+Source code on [github](https://github.com/yosheeck/bb_code_2)
 
