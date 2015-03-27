@@ -223,10 +223,10 @@ class K.BBCodeHtml extends K.BBCode
 
               # create correct prefixed url
               if command == 'link'
-                if url.substr(0, 7) != 'http://'
-                  prefixedUrl = 'http://' + url
-                else
+                if (url.substr(0, 7) == 'http://') or (url.substr(0, 8) == 'https://')
                   prefixedUrl = url
+                else
+                  prefixedUrl = 'http://' + url
               else
                 # the command is 'linkin'
                 prefixedUrl = @setup.innerUrl + url

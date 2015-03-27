@@ -349,6 +349,9 @@ suite 'KBBCodeHtml', ->
     bb.parse('[link url="ke.mu"][/]').should.be.eql('<a href="http://ke.mu">ke.mu</a>')
     bb.parse('[link open url="http://ke.mu"][/]').should.be.eql('<a href="http://ke.mu" target="_blank">http://ke.mu</a>')
 
+    # https support
+    bb.parse('[link url="https://www.npmjs.com/package/bb2"][/]').should.be.eql('<a href="https://www.npmjs.com/package/bb2">https://www.npmjs.com/package/bb2</a>')
+
   test 'bb-html: internal links', ->
     bb = new K.BBCodeHtml({innerUrl:'http://ke.mu/'})
     bb.THROW_EXCEPTIONS = true
