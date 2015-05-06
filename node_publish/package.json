@@ -1,8 +1,9 @@
 {
   "name": "bb2",
-  "version": "0.0.5",
-  "description": "BB Code 2.0 (aka KBB)",
+  "version": "1.0.2",
+  "description": "BB Code 2.0 (aka KBB) - the redefined BB-Code",
   "main": "./src/index",
+  "homepage": "http://doc.ke.mu/doc/bb",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +12,11 @@
     "BB",
     "kbb"
   ],
+  "repository" :
+  {
+    "type" : "git",
+    "url" : "https://github.com/yosheeck/bb_code_2"
+  },
   "main": "./src/index",
   "author": "Yosh Kemu <y@ke.mu> (http://yosh.ke.mu/)",
   "license": "ISC"

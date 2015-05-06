@@ -55,11 +55,15 @@ class K.BBCodeHtml extends K.BBCode
   _htmlStack_applyByIdx: (state, stackIdx) ->
     htmlAction = @htmlStack[stackIdx]
     if htmlAction.type == 'openClose'
-      htmlId = htmlAction['htmlId']
+      htmlId = htmlAction.htmlId
+      if htmlAction.htmlEx?
+        htmlEx = htmlAction.htmlEx
+      else
+        htmlEx = ''
       switch htmlId
         when 'b', 'i', 'u', 'p', \
         'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
-          state.out += '<' + htmlId + '>'
+          state.out += '<' + htmlId + htmlEx + '>'
 
   _htmlStack_unapplyByIdx: (state, stackIdx) ->
     htmlAction = @htmlStack[stackIdx]
@@ -145,6 +149,19 @@ class K.BBCodeHtml extends K.BBCode
 
     state.out += '<a href="' + params.prefixedUrl + '"' + params.target + params.htmlClass + moreTxt + '>'
 
+  _htmlCommonHtmlArgsParse: (args) ->
+    htmlEx = ''
+
+    # get the class param, if exists
+    if @_argsIsKey(args, 'class')
+      htmlEx += ' class="' + @_argsGetValue(args, 'class') + '"'
+
+    # get the id param, if exists
+    if @_argsIsKey(args, 'id')
+      htmlEx += ' id="' + @_argsGetValue(args, 'id') + '"'
+
+    return htmlEx
+
   _parseBBCommand: (state, command, prefix) ->
     # most of the code below needs empty "args" array
     args = []
@@ -157,8 +174,9 @@ class K.BBCodeHtml extends K.BBCode
         when 'b', 'i', 'u', 'p', \
         'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
           @_parseBBCommandArgs(state, command, prefix, args)
+          htmlEx = @_htmlCommonHtmlArgsParse(args)
           if @htmlData.depth[command] == 0
-            @_htmlStack_push(state, {type:'openClose', htmlId: command})
+            @_htmlStack_push(state, {type:'openClose', htmlId: command, htmlEx: htmlEx})
           @htmlData.depth[command]++
 
         when 'li'
@@ -205,10 +223,10 @@ class K.BBCodeHtml extends K.BBCode
 
               # create correct prefixed url
               if command == 'link'
-                if url.substr(0, 7) != 'http://'
-                  prefixedUrl = 'http://' + url
-                else
+                if (url.substr(0, 7) == 'http://') or (url.substr(0, 8) == 'https://')
                   prefixedUrl = url
+                else
+                  prefixedUrl = 'http://' + url
               else
                 # the command is 'linkin'
                 prefixedUrl = @setup.innerUrl + url
@@ -228,11 +246,7 @@ class K.BBCodeHtml extends K.BBCode
 
         when 'img'
           @_parseBBCommandArgs(state, command, prefix, args)
-          htmlEx = ''
-
-          # get the class param, if exists
-          if @_argsIsKey(args, 'class')
-            htmlEx += ' class="' + @_argsGetValue(args, 'class') + '"'
+          htmlEx = @_htmlCommonHtmlArgsParse(args)
 
           # get the alt param, if exists
           if @_argsIsKey(args, 'alt')

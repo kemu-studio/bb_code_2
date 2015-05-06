@@ -337,9 +337,6 @@ suite 'KBBCodeHtml', ->
     bb.parse('This \n[h1]text is[/]\n\nline-breaked.').should.be.eql('This <br><h1>text is</h1><br>line-breaked.')
     bb.parse('This \n[h1]text is[/]x\n\nline-breaked.').should.be.eql('This <br><h1>text is</h1>x<br><br>line-breaked.')
 
-    bb.parse('').should.be.eql('')
-    bb.parse('').should.be.eql('')
-
   test 'bb-html: links', ->
     bb = new K.BBCodeHtml()
     bb.THROW_EXCEPTIONS = true
@@ -351,6 +348,9 @@ suite 'KBBCodeHtml', ->
     bb.parse('[link url="ke.mu"][/link]').should.be.eql('<a href="http://ke.mu">ke.mu</a>')
     bb.parse('[link url="ke.mu"][/]').should.be.eql('<a href="http://ke.mu">ke.mu</a>')
     bb.parse('[link open url="http://ke.mu"][/]').should.be.eql('<a href="http://ke.mu" target="_blank">http://ke.mu</a>')
+
+    # https support
+    bb.parse('[link url="https://www.npmjs.com/package/bb2"][/]').should.be.eql('<a href="https://www.npmjs.com/package/bb2">https://www.npmjs.com/package/bb2</a>')
 
   test 'bb-html: internal links', ->
     bb = new K.BBCodeHtml({innerUrl:'http://ke.mu/'})
@@ -365,18 +365,26 @@ suite 'KBBCodeHtml', ->
     bb.THROW_EXCEPTIONS = true
     bb.parse('The text [target id=thePlaceToJump] and more text.').should.be.eql('The text <a name="thePlaceToJump"></a> and more text.')
 
-
-  test 'bb-html: target', ->
+  test 'bb-html: image', ->
     bb = new K.BBCodeHtml({imgUrl:'http://ke.mu/g/'})
     bb.THROW_EXCEPTIONS = true
-
     bb.parse('The text [img src="the_img.jpg"] and more text.').should.be.eql('The text <img src="http://ke.mu/g/the_img.jpg"/> and more text.')
     bb.parse('[img src="the_img.jpg" class="xxx" alt="yyy"]').should.be.eql('<img src="http://ke.mu/g/the_img.jpg" class="xxx" alt="yyy"/>')
     bb.parse('The [img]the_img.png[/] image.').should.be.eql('The <img src="http://ke.mu/g/the_img.png"/> image.')
 
+  test 'bb-html: generic parameters support: parameter class', ->
+    bb = new K.BBCodeHtml({imgUrl:'http://ke.mu/g/'})
+    bb.THROW_EXCEPTIONS = true
+
+    bb.parse('[img class=abc src="the_img.jpg"]').should.be.eql('<img src="http://ke.mu/g/the_img.jpg" class="abc"/>')
+    bb.parse('[h1 class=abc]xyz[/]').should.be.eql('<h1 class="abc">xyz</h1>')
+
+  test 'bb-html: generic parameters support: parameter id', ->
+    bb = new K.BBCodeHtml({imgUrl:'http://ke.mu/g/'})
+    bb.THROW_EXCEPTIONS = true
+
+    bb.parse('[h1 id=abc]xyz[/]').should.be.eql('<h1 id="abc">xyz</h1>')
+    bb.parse('[img class=abc id=xxx src="the_img.jpg"]').should.be.eql('<img src="http://ke.mu/g/the_img.jpg" class="abc" id="xxx"/>')
 
 
-    bb.parse('').should.be.eql('')
-    bb.parse('').should.be.eql('')
-    bb.parse('').should.be.eql('')
     bb.parse('').should.be.eql('')
