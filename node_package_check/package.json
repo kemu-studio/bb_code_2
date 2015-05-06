@@ -9,6 +9,6 @@
   "author": "Yosh Kemu <y@ke.mu> (http://yosh.ke.mu/)",
   "license": "ISC",
   "dependencies": {
-    "bb2": "0.0.5"
+    "bb2": "*"
   }
 }
