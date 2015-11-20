@@ -141,7 +141,7 @@ class K.BBCodeHtml extends K.BBCode
 
   _htmlEmitAhref: (state, params) ->
     moreTxt = ''
-    if (params.command is 'linkin') and (params.target != '')
+    if (params.command is 'linkin') and (params.target == '')
       if @setup.blockOnClickOnInternalLinks
         moreTxt += ' ' + K.LinksUtil.getOnClickEventBlockerTxt()
       if @setup.passLinkDataOnInternalLinks
