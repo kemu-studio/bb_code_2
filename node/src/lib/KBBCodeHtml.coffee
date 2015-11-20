@@ -128,6 +128,9 @@ class K.BBCodeHtml extends K.BBCode
           @_htmlStack_closeById(state, command)
           @htmlData['depth'].li--
 
+      else
+        @_htmlStack_closeById(state, command)
+
     # after some commands we force ignoring of following line-break
     switch command
       when 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', \
