@@ -218,11 +218,8 @@ class K.BBCode
       state.srcIdx = step
 
   _parseBB: (state) ->
-    # init parsing
-    srcLen = state.src.length
-
     # parse
-    while state.srcIdx < srcLen
+    while state.srcIdx < state.src.length
       ch = state.src.charAt(state.srcIdx)
       if ch == '['
         @_parseBBTag(state)
