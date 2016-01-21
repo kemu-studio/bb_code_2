@@ -1,6 +1,6 @@
 {
   "name": "bb2",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "BB Code 2.0 (aka KBB) - the redefined BB-Code",
   "main": "./src/index",
   "homepage": "http://doc.ke.mu/doc/bb",
