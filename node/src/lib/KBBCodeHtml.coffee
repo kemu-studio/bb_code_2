@@ -1,11 +1,10 @@
-if __pathToKCore?
-  K = require(__pathToKCore)
+if exports?
+  K = require('kcore')
   require('./KBBCode.coffee')
-  K.requireLib('server/KServerCore.coffee')
-else
-  K = {}
-  K.BBCode = require('./KBBCode.coffee').BBCode
-  K.Object = require('./KObject.coffee').Object
+
+# help solve strange cases, where K.BBCode has not been properly included - e.g. something went wrong with kcore
+if not K.BBCode?
+  console.log 'K.BBCode class not found, probably kcore or KBBCode has not been included'
 
 class K.BBCodeHtml extends K.BBCode
   @DEFAULT_SETUP = {

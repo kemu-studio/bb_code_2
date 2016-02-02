@@ -1,7 +1,5 @@
-if __pathToKCore?
-  K = require(__pathToKCore)
-else
-  K = {}
+if exports?
+  K = require('kcore')
 
 class K.BBCodeException extends Error
   constructor: (@message, @state) ->

@@ -1,0 +1,7 @@
+1.1.1
+  Released 20160202
+  Added kcore dependency to package.json
+
+1.1.0
+  Released 20160202
+  Using dependency package kcore and now some code/inclusions became obsolete, so removed them
