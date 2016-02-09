@@ -275,6 +275,20 @@ suite 'KBBCodeHtml', ->
     bb.parse('abc[p]x[/]').should.be.eql('abc<p>x</p>')
     bb.parse('abc[p]xa[/p]xb[p]xc[/]').should.be.eql('abc<p>xa</p>xb<p>xc</p>')
 
+  test 'bb-html: simple tag [sub]', ->
+    bb = new K.BBCodeHtml()
+    bb.THROW_EXCEPTIONS = true
+    bb.parse('abc[sub]x[/sub]').should.be.eql('abc<sub>x</sub>')
+    bb.parse('abc[sub]x[/]').should.be.eql('abc<sub>x</sub>')
+    bb.parse('abc[sub]xa[/sub]xb[sub]xc[/]').should.be.eql('abc<sub>xa</sub>xb<sub>xc</sub>')
+
+  test 'bb-html: simple tag [sup]', ->
+    bb = new K.BBCodeHtml()
+    bb.THROW_EXCEPTIONS = true
+    bb.parse('abc[sup]x[/sup]').should.be.eql('abc<sup>x</sup>')
+    bb.parse('abc[sup]x[/]').should.be.eql('abc<sup>x</sup>')
+    bb.parse('abc[sup]xa[/sup]xb[sup]xc[/]').should.be.eql('abc<sup>xa</sup>xb<sup>xc</sup>')
+
   test 'bb-html: special characters in allowDirectHtml == false', ->
     bb = new K.BBCodeHtml()
     bb.THROW_EXCEPTIONS = true
