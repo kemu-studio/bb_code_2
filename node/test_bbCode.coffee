@@ -350,6 +350,7 @@ suite 'KBBCodeHtml', ->
     bb.parse('This \n[h1]text is[/]\nline-breaked.').should.be.eql('This <br><h1>text is</h1>line-breaked.')
     bb.parse('This \n[h1]text is[/]\n\nline-breaked.').should.be.eql('This <br><h1>text is</h1><br>line-breaked.')
     bb.parse('This \n[h1]text is[/]x\n\nline-breaked.').should.be.eql('This <br><h1>text is</h1>x<br><br>line-breaked.')
+    bb.parse('This \n[ul]\n[li]line-breaked\nitem[/].').should.be.eql('This <br><ul><li>line-breaked<br>item</li></ul>.')
 
   test 'bb-html: links', ->
     bb = new K.BBCodeHtml()

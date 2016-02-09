@@ -135,7 +135,7 @@ class K.BBCodeHtml extends K.BBCode
     # after some commands we force ignoring of following line-break
     switch command
       when 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', \
-      'li', 'p'
+      'li', 'p', 'ul'
         @htmlData.skipLineBreak = 1
 
   _htmlStack_closeAtTop: (state) ->
@@ -200,6 +200,7 @@ class K.BBCodeHtml extends K.BBCode
               state.out += '</li><li>'
 
         when 'ul'
+          @htmlData.skipLineBreak = 1
           @_parseBBCommandArgs(state, command, prefix, args)
           if @htmlData.depth.li > 0
             if @htmlData.liGoDeeper == 0
