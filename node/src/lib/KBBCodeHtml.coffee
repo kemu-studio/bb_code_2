@@ -40,6 +40,8 @@ class K.BBCodeHtml extends K.BBCode
         li: 0
         a: 0
         img: 0
+        sub: 0
+        sup: 0
       }
       liGoDeeper: 0
       skipLineBreak: 0
@@ -60,7 +62,7 @@ class K.BBCodeHtml extends K.BBCode
       else
         htmlEx = ''
       switch htmlId
-        when 'b', 'i', 'u', 'p', \
+        when 'b', 'i', 'u', 'p', 'sub', 'sup', \
         'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
           state.out += '<' + htmlId + htmlEx + '>'
 
@@ -69,7 +71,7 @@ class K.BBCodeHtml extends K.BBCode
     if htmlAction.type == 'openClose'
       htmlId = htmlAction['htmlId']
       switch htmlId
-        when 'b', 'i', 'u', 'p', \
+        when 'b', 'i', 'u', 'p', 'sub', 'sup', \
         'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
           state.out += '</' + htmlId + '>'
 
@@ -114,7 +116,7 @@ class K.BBCodeHtml extends K.BBCode
   _htmlStack_executeClose: (state, command) ->
     # execute the close of a command itself
     switch command
-      when 'b', 'i', 'u', 'p', \
+      when 'b', 'i', 'u', 'p', 'sub', 'sup', \
       'h1', 'h2', 'h3', 'h4', 'h5', 'h6', \
       'a', 'img'
         # if there is command of that type on the stack, then pop it
@@ -173,7 +175,7 @@ class K.BBCodeHtml extends K.BBCode
     #
     if prefix == ''
       switch (command)
-        when 'b', 'i', 'u', 'p', \
+        when 'b', 'i', 'u', 'p', 'sub', 'sup', \
         'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
           @_parseBBCommandArgs(state, command, prefix, args)
           htmlEx = @_htmlCommonHtmlArgsParse(args)
@@ -279,7 +281,7 @@ class K.BBCodeHtml extends K.BBCode
     #
     else if prefix == '/'
       switch (command)
-        when 'b', 'i', 'u', 'p', \
+        when 'b', 'i', 'u', 'p', 'sub', 'sup', \
         'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
           @_parseBBCommandArgs(state, command, prefix, args)
           @_htmlStack_executeClose(state, command)
@@ -373,4 +375,3 @@ class K.BBCodeHtml extends K.BBCode
     return super(src)
 
 exports.BBCodeHtml = K.BBCodeHtml
-
