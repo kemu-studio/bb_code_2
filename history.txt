@@ -1,3 +1,8 @@
+1.1.2
+  Released 20160210
+  NEW: Implemented [sub] and [sup] tags
+  FIX: line-break between [ul] and [li] is now ignored
+
 1.1.1
   Released 20160202
   Added kcore dependency to package.json
