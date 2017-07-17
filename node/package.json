@@ -9,9 +9,8 @@
   "author": "Yosh Kemu <y@ke.mu> (http://yosh.ke.mu/)",
   "license": "ISC",
   "dependencies": {
-    "fs-extra": "^0.16.5",
-    "kcore": "^0.9.0",
-    "mocha": "^2.2.1",
-    "should": "^5.2.0"
+    "kcore": "^0.10.2",
+    "mocha": "^3.4.2",
+    "should": "^11.2.1"
   }
 }

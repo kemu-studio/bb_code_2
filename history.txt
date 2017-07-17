@@ -1,3 +1,7 @@
+1.2.0
+  Released 20170717
+  UPDATED all dependencies
+
 1.1.2
   Released 20160210
   NEW: Implemented [sub] and [sup] tags
