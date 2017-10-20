@@ -149,12 +149,17 @@ class K.BBCode
         @_parseBBCommandArgs(state, command, prefix, [])
         closeIdx = state.src.indexOf('[1', state.srcIdx)
         if closeIdx != -1
-          state.srcIdx = closeIdx + 2
-          @_parseBBCommandArgs(state, command, prefix, [])
+          # Close [1] tag found - go to it.
+          state.srcIdx = closeIdx
         else
+          # Close [1] tag missing - go to the end of input.
           state.srcIdx = state.src.length
+
       when '1'
         @_parseBBCommandArgs(state, command, prefix, [])
+        # Skip line-break just after [1] tag.
+        if (state.src[state.srcIdx] == '\n')
+          state.srcIdx++
       else
         state.out += '[' + prefix + command
         state.failureMark = ''

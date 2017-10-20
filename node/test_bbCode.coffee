@@ -240,6 +240,7 @@ suite 'KBBCode', ->
     bb.parse('a[0]n[1]b').should.be.eql('ab')
     bb.parse('a[0]n').should.be.eql('a')
     bb.parse('a[0]n[0]b[1]c[0]x').should.be.eql('ac')
+    bb.parse('1\n[0]\n\n[1]\n2').should.be.eql('1\n2')
     return null
 
 suite 'KBBCodeHtml', ->
