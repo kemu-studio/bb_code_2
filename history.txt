@@ -1,3 +1,11 @@
+1.2.2
+  Released 20171021
+  Implemented: Skip line-break just after [1] tag.
+
+1.2.1
+  Released 20170912
+  UPDATED all dependencies
+
 1.2.0
   Released 20170717
   UPDATED all dependencies
