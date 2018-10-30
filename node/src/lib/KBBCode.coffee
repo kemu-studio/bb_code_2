@@ -3,6 +3,7 @@ if exports?
 
 class K.BBCodeException extends Error
   constructor: (@message, @state) ->
+    super()
     Error.captureStackTrace(@,@)
 
   toString: () ->
