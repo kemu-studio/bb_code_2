@@ -1,378 +1,755 @@
-if exports?
-  K = require('kcore')
-  require('./KBBCode.coffee')
+(function () {
 
-# help solve strange cases, where K.BBCode has not been properly included - e.g. something went wrong with kcore
-if not K.BBCode?
-  console.log 'K.BBCode class not found, probably kcore or KBBCode has not been included'
+// Is it server or browser?
+let K = null;
 
-class K.BBCodeHtml extends K.BBCode
-  @DEFAULT_SETUP = {
-    allowDirectHtml: false
-    innerUrl: ''
-    imgUrl: ''
-    lbToBrEnabled: true
-    blockOnClickOnInternalLinks: false
-    passLinkDataOnInternalLinks: false
+if (typeof exports !== "undefined" && exports !== null)
+{
+  // Server - load K namespace from npm package.
+  K = require('kcore');
+  require('./KBBCode');
+}
+else
+{
+  // Browser.
+  K = window.K;
+}
+
+// help solve strange cases, where K.BBCode has not been properly included - e.g.
+// something went wrong with kcore
+if (K.Object.isUndefinedOrNull(K.BBCode))
+{
+  console.log('K.BBCode class not found, probably kcore or KBBCode has not been included');
+}
+
+K.BBCodeHtml = class K_BBCodeHtml extends K.BBCode
+{
+  constructor(inSetup = {})
+  {
+    setup = {};
+    K.Object.merge(setup, K.BBCodeHtml.DEFAULT_SETUP);
+    K.Object.merge(setup, inSetup);
+    super(setup);
+    this._clearHtmlData();
   }
 
-  constructor: (inSetup = {}) ->
-    setup = {}
-    K.Object.merge(setup, K.BBCodeHtml.DEFAULT_SETUP)
-    K.Object.merge(setup, inSetup)
-    super(setup)
-    @_clearHtmlData()
-
-  _clearHtmlData: () ->
-    @htmlStack = []
-    @htmlData  = {
+  _clearHtmlData()
+  {
+    this.htmlStack = [];
+    this.htmlData  = {
       depth: {
-        b: 0
-        i: 0
-        u: 0
-        p: 0
-        h1: 0
-        h2: 0
-        h3: 0
-        h4: 0
-        h5: 0
-        h6: 0
-        li: 0
-        a: 0
-        img: 0
-        sub: 0
+        b: 0,
+        i: 0,
+        u: 0,
+        p: 0,
+        h1: 0,
+        h2: 0,
+        h3: 0,
+        h4: 0,
+        h5: 0,
+        h6: 0,
+        li: 0,
+        a: 0,
+        img: 0,
+        sub: 0,
         sup: 0
+      },
+      liGoDeeper: 0,
+      skipLineBreak: 0,
+    };
+  }
+
+  _htmlStack_findByHtmlIdFromTop(htmlId)
+  {
+    for (let idx = this.htmlStack.length - 1; idx >= 0; idx--)
+    {
+      if (this.htmlStack[idx].htmlId == htmlId)
+      {
+        return idx;
       }
-      liGoDeeper: 0
-      skipLineBreak: 0
     }
 
-  _htmlStack_findByHtmlIdFromTop: (htmlId) ->
-    for idx in [@htmlStack.length - 1..0] by -1
-      if @htmlStack[idx].htmlId == htmlId
-        return idx
-    return -1
+    return -1;
+  }
 
-  _htmlStack_applyByIdx: (state, stackIdx) ->
-    htmlAction = @htmlStack[stackIdx]
-    if htmlAction.type == 'openClose'
-      htmlId = htmlAction.htmlId
-      if htmlAction.htmlEx?
-        htmlEx = htmlAction.htmlEx
-      else
-        htmlEx = ''
-      switch htmlId
-        when 'b', 'i', 'u', 'p', 'sub', 'sup', \
-        'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
-          state.out += '<' + htmlId + htmlEx + '>'
+  _htmlStack_applyByIdx(state, stackIdx)
+  {
+    const htmlAction = this.htmlStack[stackIdx];
 
-  _htmlStack_unapplyByIdx: (state, stackIdx) ->
-    htmlAction = @htmlStack[stackIdx]
-    if htmlAction.type == 'openClose'
-      htmlId = htmlAction['htmlId']
-      switch htmlId
-        when 'b', 'i', 'u', 'p', 'sub', 'sup', \
-        'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
-          state.out += '</' + htmlId + '>'
+    if (htmlAction.type == 'openClose')
+    {
+      const htmlId = htmlAction.htmlId;
 
-        when 'li'
-          state.out += '</li></ul>'
+      let htmlEx = '';
 
-        when 'img'
-          url = state.out.substr(@htmlData.img.stateOutLen)
-          prefixedUrl = @setup.imgUrl + url
-          state.out = state.out.substr(0, @htmlData.img.stateOutLen)
-          state.out += '<img src="' + prefixedUrl + '"' + @htmlData.img.exArgs + '/>'
+      if (K.Object.isNotNull(htmlAction.htmlEx))
+      {
+        htmlEx = htmlAction.htmlEx;
+      }
 
-        when 'a'
-          # if there was no text inside of link bb-code, then
-          # simply emit url once again
-          if @htmlData.outLenDuringATag == state.out.length
-            state.out += @htmlData.urlDuringATag
-          state.out += '</a>'
+      switch (htmlId)
+      {
+        case 'b':
+        case 'i':
+        case 'u':
+        case 'p':
+        case 'sub':
+        case 'sup':
+        case 'h1':
+        case 'h2':
+        case 'h3':
+        case 'h4':
+        case 'h5':
+        case 'h6':
+        {
+          state.out += '<' + htmlId + htmlEx + '>';
 
-  _htmlStack_removeByIdx: (state, stackIdx) ->
-    @_htmlStack_unapplyByIdx(state, stackIdx)
-    @htmlStack.splice(stackIdx, 1)
+          break;
+        }
+      }
+    }
+  }
 
-  _htmlStack_closeById: (state, htmlId) ->
-    htmlActionIdx = @_htmlStack_findByHtmlIdFromTop(htmlId)
-    if htmlActionIdx >= 0
-      # un-apply all items from top till the one we want to close
-      for idx in [(@htmlStack.length - 1)..(htmlActionIdx + 1)] by -1
-        @_htmlStack_unapplyByIdx(state, idx)
+  _htmlStack_unapplyByIdx(state, stackIdx)
+  {
+    const htmlAction = this.htmlStack[stackIdx];
 
-      # remove the item from the stack
-      @_htmlStack_removeByIdx(state, idx)
+    if (htmlAction.type == 'openClose')
+    {
+      const htmlId = htmlAction['htmlId'];
 
-      # reapply all items previously un-applied
-      for idx in [htmlActionIdx..(@htmlStack.length - 1)] by 1
-        @_htmlStack_applyByIdx(state, idx)
+      switch (htmlId)
+      {
+        case 'b':
+        case 'i':
+        case 'u':
+        case 'p':
+        case 'sub':
+        case 'sup':
+        case 'h1':
+        case 'h2':
+        case 'h3':
+        case 'h4':
+        case 'h5':
+        case 'h6':
+        {
+          state.out += '</' + htmlId + '>';
 
-  _htmlStack_push: (state, htmlAction) ->
-    @htmlStack.push(htmlAction)
-    @_htmlStack_applyByIdx(state, @htmlStack.length - 1)
+          break;
+        }
 
-  _htmlStack_executeClose: (state, command) ->
-    # execute the close of a command itself
-    switch command
-      when 'b', 'i', 'u', 'p', 'sub', 'sup', \
-      'h1', 'h2', 'h3', 'h4', 'h5', 'h6', \
-      'a', 'img'
-        # if there is command of that type on the stack, then pop it
-        if @htmlData['depth'][command] > 0
-          @_htmlStack_closeById(state, command)
-          @htmlData['depth'][command] = 0
+        case 'li':
+        {
+          state.out += '</li></ul>';
 
-      when 'li'
-        if @htmlData['depth'].li > 0
-          @_htmlStack_closeById(state, command)
-          @htmlData['depth'].li--
+          break;
+        }
 
-      else
-        @_htmlStack_closeById(state, command)
+        case 'img':
+        {
+          const url         = state.out.substr(this.htmlData.img.stateOutLen);
+          const prefixedUrl = this.setup.imgUrl + url;
 
-    # after some commands we force ignoring of following line-break
-    switch command
-      when 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', \
-      'li', 'p', 'ul'
-        @htmlData.skipLineBreak = 1
+          state.out = state.out.substr(0, this.htmlData.img.stateOutLen);
+          state.out += '<img src="' + prefixedUrl + '"' + this.htmlData.img.exArgs + '/>';
 
-  _htmlStack_closeAtTop: (state) ->
-    topIdx = @htmlStack.length - 1
+          break;
+        }
+
+        case 'a':
+        {
+          // if there was no text inside of link bb-code, then
+          // simply emit url once again
+
+          if (this.htmlData.outLenDuringATag == state.out.length)
+          {
+            state.out += this.htmlData.urlDuringATag;
+          }
+
+          state.out += '</a>';
+
+          break;
+        }
+      }
+    }
+  }
+
+  _htmlStack_removeByIdx(state, stackIdx)
+  {
+    this._htmlStack_unapplyByIdx(state, stackIdx);
+
+    this.htmlStack.splice(stackIdx, 1);
+  }
+
+  _htmlStack_closeById(state, htmlId)
+  {
+    const htmlActionIdx = this._htmlStack_findByHtmlIdFromTop(htmlId);
+
+    if (htmlActionIdx >= 0)
+    {
+      // un-apply all items from top till the one we want to close
+      for (let idx = this.htmlStack.length - 1; idx >= htmlActionIdx + 1; idx--)
+      {
+        this._htmlStack_unapplyByIdx(state, idx);
+      }
+
+      // remove the item from the stack
+      this._htmlStack_removeByIdx(state, htmlActionIdx);
+
+
+      // reapply all items previously un-applied
+      for (let idx = htmlActionIdx; idx <= this.htmlStack.length - 1; idx++)
+      {
+        this._htmlStack_applyByIdx(state, idx);
+      }
+    }
+  }
+
+  _htmlStack_push(state, htmlAction)
+  {
+    this.htmlStack.push(htmlAction);
+
+    this._htmlStack_applyByIdx(state, this.htmlStack.length - 1);
+  }
+
+  _htmlStack_executeClose(state, command)
+  {
+    // execute the close of a command itself
+    switch(command)
+    {
+      case 'b':
+      case 'i':
+      case 'u':
+      case 'p':
+      case 'sub':
+      case 'sup':
+      case 'h1':
+      case 'h2':
+      case 'h3':
+      case 'h4':
+      case 'h5':
+      case 'h6':
+      case 'a':
+      case 'img':
+      {
+        // if there is command of that type on the stack, then pop it
+        if (this.htmlData['depth'][command] > 0)
+        {
+          this._htmlStack_closeById(state, command);
+
+          this.htmlData['depth'][command] = 0;
+        }
+
+        break;
+      }
+
+      case 'li':
+      {
+        if (this.htmlData['depth'].li > 0)
+        {
+          this._htmlStack_closeById(state, command);
+
+          this.htmlData['depth'].li--;
+        }
+
+        break;
+      }
+
+      default:
+      {
+        this._htmlStack_closeById(state, command);
+      }
+    }
+
+    // after some commands we force ignoring of following line-break
+    switch (command)
+    {
+      case 'h1':
+      case 'h2':
+      case 'h3':
+      case 'h4':
+      case 'h5':
+      case 'h6':
+      case 'li':
+      case 'p':
+      case 'ul':
+      {
+        this.htmlData.skipLineBreak = 1;
+
+        break;
+      }
+    }
+  }
+
+  _htmlStack_closeAtTop(state)
+  {
+    const topIdx = this.htmlStack.length - 1;
+
     if (topIdx >= 0)
-      @_htmlStack_executeClose(state, @htmlStack[topIdx].htmlId)
+    {
+      this._htmlStack_executeClose(state, this.htmlStack[topIdx].htmlId);
+    }
+  }
 
-  _htmlEmitAhref: (state, params) ->
-    moreTxt = ''
-    if (params.command is 'linkin') and (params.target == '')
-      if @setup.blockOnClickOnInternalLinks
-        moreTxt += ' ' + K.LinksUtil.getOnClickEventBlockerTxt()
-      if @setup.passLinkDataOnInternalLinks
-        moreTxt += ' ' + K.LinksUtil.getLinkAsDataParam(params.plainUrl)
+  _htmlEmitAhref(state, params)
+  {
+    let moreTxt = '';
 
-    state.out += '<a href="' + params.prefixedUrl + '"' + params.target + params.htmlClass + moreTxt + '>'
+    if ((params.command == 'linkin') && (params.target == ''))
+    {
+      if (this.setup.blockOnClickOnInternalLinks)
+      {
+        moreTxt += ' ' + K.LinksUtil.getOnClickEventBlockerTxt();
+      }
 
-  _htmlCommonHtmlArgsParse: (args) ->
-    htmlEx = ''
+      if (this.setup.passLinkDataOnInternalLinks)
+      {
+        moreTxt += ' ' + K.LinksUtil.getLinkAsDataParam(params.plainUrl);
+      }
+    }
 
-    # get the class param, if exists
-    if @_argsIsKey(args, 'class')
-      htmlEx += ' class="' + @_argsGetValue(args, 'class') + '"'
+    state.out += '<a href="' + params.prefixedUrl + '"' + params.target + params.htmlClass + moreTxt + '>';
+  }
 
-    # get the id param, if exists
-    if @_argsIsKey(args, 'id')
-      htmlEx += ' id="' + @_argsGetValue(args, 'id') + '"'
+  _htmlCommonHtmlArgsParse(args)
+  {
+    let htmlEx = '';
 
-    return htmlEx
+    // get the class param, if exists
+    if (this._argsIsKey(args, 'class'))
+    {
+      htmlEx += ' class="' + this._argsGetValue(args, 'class') + '"';
+    }
 
-  _parseBBCommand: (state, command, prefix) ->
-    # most of the code below needs empty "args" array
-    args = []
+    // get the id param, if exists
+    if (this._argsIsKey(args, 'id'))
+    {
+      htmlEx += ' id="' + this._argsGetValue(args, 'id') + '"';
+    }
 
-    #
-    # opener - no prefix
-    #
-    if prefix == ''
+    return htmlEx;
+  }
+
+  _parseBBCommand(state, command, prefix)
+  {
+    // most of the code below needs empty "args" array
+    const args = [];
+
+    if (prefix == '')
+    {
+      // opener - no prefix
       switch (command)
-        when 'b', 'i', 'u', 'p', 'sub', 'sup', \
-        'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
-          @_parseBBCommandArgs(state, command, prefix, args)
-          htmlEx = @_htmlCommonHtmlArgsParse(args)
-          if @htmlData.depth[command] == 0
-            @_htmlStack_push(state, {type:'openClose', htmlId: command, htmlEx: htmlEx})
-          @htmlData.depth[command]++
+      {
+        case 'b':
+        case 'i':
+        case 'u':
+        case 'p':
+        case 'sub':
+        case 'sup':
+        case 'h1':
+        case 'h2':
+        case 'h3':
+        case 'h4':
+        case 'h5':
+        case 'h6':
+        {
+          this._parseBBCommandArgs(state, command, prefix, args);
 
-        when 'li'
-          @_parseBBCommandArgs(state, command, prefix, args)
-          if @htmlData.depth.li == 0
-            @_htmlStack_push(state, {type:'openClose', htmlId: 'li'})
-            state.out += '<ul><li>'
-            @htmlData.depth.li = 1
-          else if @htmlData.depth.li > 0
-            # if there was [ul] just recently, which goes "deeper"
-            if @htmlData.liGoDeeper
-              @_htmlStack_push(state, {type:'openClose', htmlId: 'li'})
-              state.out += '<ul><li>'
-              @htmlData.liGoDeeper = 0
-              @htmlData.depth.li++
+          const htmlEx = this._htmlCommonHtmlArgsParse(args);
+
+          if (this.htmlData.depth[command] == 0)
+          {
+            this._htmlStack_push(state, {type:'openClose', htmlId: command, htmlEx: htmlEx});
+          }
+
+          this.htmlData.depth[command]++;
+
+          break;
+        }
+
+        case 'li':
+        {
+          this._parseBBCommandArgs(state, command, prefix, args);
+
+          if (this.htmlData.depth.li == 0)
+          {
+            this._htmlStack_push(state, {type:'openClose', htmlId: 'li'});
+            state.out += '<ul><li>';
+            this.htmlData.depth.li = 1;
+          }
+          else if (this.htmlData.depth.li > 0)
+          {
+            // if there was [ul] just recently, which goes "deeper"
+            if (this.htmlData.liGoDeeper)
+            {
+              this._htmlStack_push(state, {type:'openClose', htmlId: 'li'});
+              state.out += '<ul><li>';
+              this.htmlData.liGoDeeper = 0;
+              this.htmlData.depth.li++;
+            }
             else
-              state.out += '</li><li>'
+            {
+              state.out += '</li><li>';
+            }
+          }
 
-        when 'ul'
-          @htmlData.skipLineBreak = 1
-          @_parseBBCommandArgs(state, command, prefix, args)
-          if @htmlData.depth.li > 0
-            if @htmlData.liGoDeeper == 0
-              @htmlData.liGoDeeper = 1
+          break;
+        }
+
+        case 'ul':
+        {
+          this.htmlData.skipLineBreak = 1;
+
+          this._parseBBCommandArgs(state, command, prefix, args);
+
+          if (this.htmlData.depth.li > 0)
+          {
+            if (this.htmlData.liGoDeeper == 0)
+            {
+              this.htmlData.liGoDeeper = 1;
+            }
             else
-              throw new K.BBCodeException('Cannot use html-ul after html-ul directly')
+            {
+              throw new K.BBCodeException('Cannot use html-ul after html-ul directly');
+            }
+          }
 
-        when 'link', 'linkin'
-          if @htmlData.depth.a == 0
+          break;
+        }
 
-            # parse params
-            @_parseBBCommandArgs(state, command, prefix, args)
-            url = @_argsGetValue(args, 'url')
-            target = if @_argsIsKey(args, 'open') then ' target="_blank"' else ''
-            # is the url correct
+        case 'link':
+        case 'linkin':
+        {
+          if (this.htmlData.depth.a == 0)
+          {
+            // parse params
+            this._parseBBCommandArgs(state, command, prefix, args);
 
-            if not url?
-              state.out += '?url?'
+            const url    = this._argsGetValue(args, 'url');
+            const target = this._argsIsKey(args, 'open') ? ' target="_blank"' : '';
+
+            // is the url correct
+            if (K.Object.isUndefinedOrNull(url))
+            {
+              state.out += '?url?';
+            }
             else
-              # get the class param, if exists
-              if @_argsIsKey(args, 'class')
-                htmlClass = ' class="' + @_argsGetValue(args, 'class') + '"'
-              else
-                htmlClass = ''
+            {
+              // get the class param, if exists
+              let htmlClass   = '';
+              let prefixedUrl = '';
 
-              # create correct prefixed url
-              if command == 'link'
-                if (url.substr(0, 7) == 'http://') or (url.substr(0, 8) == 'https://')
-                  prefixedUrl = url
+              if (this._argsIsKey(args, 'class'))
+              {
+                htmlClass = ' class="' + this._argsGetValue(args, 'class') + '"';
+              }
+
+              // create correct prefixed url
+              if (command == 'link')
+              {
+                if ((url.substr(0, 7) == 'http://') || (url.substr(0, 8) == 'https://'))
+                {
+                  prefixedUrl = url;
+                }
                 else
-                  prefixedUrl = 'http://' + url
+                {
+                  prefixedUrl = 'http://' + url;
+                }
+              }
               else
-                # the command is 'linkin'
-                prefixedUrl = @setup.innerUrl + url
+              {
+                // the command is 'linkin'
+                prefixedUrl = this.setup.innerUrl + url;
+              }
 
-              # push outputs
-              @_htmlStack_push(state, {type:'openClose', htmlId: 'a'})
-              @_htmlEmitAhref(state, {
-                command:command
-                prefixedUrl:prefixedUrl
-                plainUrl:url
-                target:target
-                htmlClass:htmlClass
-              })
-              @htmlData.depth.a = 1
-              @htmlData.outLenDuringATag = state.out.length
-              @htmlData.urlDuringATag = url
+              // push outputs
+              this._htmlStack_push(state, {type:'openClose', htmlId: 'a'});
 
-        when 'img'
-          @_parseBBCommandArgs(state, command, prefix, args)
-          htmlEx = @_htmlCommonHtmlArgsParse(args)
+              this._htmlEmitAhref(state, {
+                command: command,
+                prefixedUrl: prefixedUrl,
+                plainUrl: url,
+                target: target,
+                htmlClass: htmlClass
+              });
 
-          # get the alt param, if exists
-          if @_argsIsKey(args, 'alt')
-            htmlEx += ' alt="' + @_argsGetValue(args, 'alt') + '"'
+              this.htmlData.depth.a          = 1;
+              this.htmlData.outLenDuringATag = state.out.length;
+              this.htmlData.urlDuringATag    = url;
+            }
+          }
 
-          # look for src param
-          if @_argsIsKey(args, 'src')
-            url = @_argsGetValue(args, 'src')
-            prefixedUrl = @setup.imgUrl + url
-            state.out += '<img src="' + prefixedUrl + '"' + htmlEx + '/>'
+          break;
+        }
+
+        case 'img':
+        {
+          this._parseBBCommandArgs(state, command, prefix, args);
+
+          let htmlEx = this._htmlCommonHtmlArgsParse(args);
+
+          // get the alt param, if exists
+          if (this._argsIsKey(args, 'alt'))
+          {
+            htmlEx += ' alt="' + this._argsGetValue(args, 'alt') + '"';
+          }
+
+          // look for src param
+          if (this._argsIsKey(args, 'src'))
+          {
+            const url         = this._argsGetValue(args, 'src');
+            const prefixedUrl = this.setup.imgUrl + url;
+            state.out += '<img src="' + prefixedUrl + '"' + htmlEx + '/>';
+          }
           else
-            # src not present - look for closing tag
-            if @htmlData.depth.img == 0
-              @_htmlStack_push(state, {type:'openClose', htmlId: 'img'})
-              @htmlData.img = {exArgs: htmlEx, stateOutLen: state.out.length}
-              @htmlData.depth.img = 1
+          {
+            // src not present - look for closing tag
+            if (this.htmlData.depth.img == 0)
+            {
+              this._htmlStack_push(state, {type:'openClose', htmlId: 'img'});
+              this.htmlData.img = {exArgs: htmlEx, stateOutLen: state.out.length};
+              this.htmlData.depth.img = 1;
+            }
+          }
 
-        when 'target'
-          @_parseBBCommandArgs(state, command, prefix, args)
-          state.out += '<a name="' + @_argsGetValue(args, 'id') + '"></a>'
-          @htmlData.skipLineBreak = 1
+          break;
+        }
 
-        else
-          # unhandled stuff
-          super(state, command, prefix)
-    #
-    # closer - prefix is "/""
-    #
-    else if prefix == '/'
+        case 'target':
+        {
+          this._parseBBCommandArgs(state, command, prefix, args);
+          state.out += '<a name="' + this._argsGetValue(args, 'id') + '"></a>';
+          this.htmlData.skipLineBreak = 1;
+
+          break;
+        }
+
+        default:
+        {
+          // unhandled stuff
+          super._parseBBCommand(state, command, prefix);
+        }
+      }
+    }
+    else if (prefix == '/')
+    {
+      // closer - prefix is "/""
       switch (command)
-        when 'b', 'i', 'u', 'p', 'sub', 'sup', \
-        'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
-          @_parseBBCommandArgs(state, command, prefix, args)
-          @_htmlStack_executeClose(state, command)
+      {
+        case 'b':
+        case 'i':
+        case 'u':
+        case 'p':
+        case 'sub':
+        case 'sup':
+        case 'h1':
+        case 'h2':
+        case 'h3':
+        case 'h4':
+        case 'h5':
+        case 'h6':
+        {
+          this._parseBBCommandArgs(state, command, prefix, args);
+          this._htmlStack_executeClose(state, command);
 
-        when 'li'
-          # closing of li is simply ignored
-          @_parseBBCommandArgs(state, command, prefix, args)
+          break;
+        }
 
-        when 'ul'
-          @_parseBBCommandArgs(state, command, prefix, args)
-          @_htmlStack_executeClose(state, 'li')
+        case 'li':
+        {
+          // closing of li is simply ignored
+          this._parseBBCommandArgs(state, command, prefix, args);
 
-        when 'link', 'linkin'
-          @_parseBBCommandArgs(state, command, prefix, args)
-          @_htmlStack_executeClose(state, 'a')
+          break;
+        }
 
-        when 'img'
-          @_parseBBCommandArgs(state, command, prefix, args)
-          @_htmlStack_executeClose(state, 'img')
+        case 'ul':
+        {
+          this._parseBBCommandArgs(state, command, prefix, args);
+          this._htmlStack_executeClose(state, 'li');
 
-        when ''
-          # anonymous close - remove one item from top of the stack
-          @_parseBBCommandArgs(state, command, prefix, args)
-          @_htmlStack_closeAtTop(state)
-        else
-          # unhandled stuff
-          super(state, command, prefix)
+          break;
+        }
 
-  _parseText: (state) ->
-    # prepare correct regexp according to configuration
-    if @setup.allowDirectHtml
-      PARSE_TEXT_TILL = new RegExp('[^\[\n\r\t]*', 'g')
+        case 'link':
+        case 'linkin':
+        {
+          this._parseBBCommandArgs(state, command, prefix, args);
+          this._htmlStack_executeClose(state, 'a');
+
+          break;
+        }
+
+        case 'img':
+        {
+          this._parseBBCommandArgs(state, command, prefix, args);
+          this._htmlStack_executeClose(state, 'img');
+
+          break;
+        }
+
+        case '':
+        {
+          // anonymous close - remove one item from top of the stack
+          this._parseBBCommandArgs(state, command, prefix, args);
+          this._htmlStack_closeAtTop(state);
+
+          break;
+        }
+
+        default:
+        {
+          // unhandled stuff
+          super._parseBBCommand(state, command, prefix);
+        }
+      }
+    }
+  }
+
+  _parseText(state)
+  {
+    // prepare correct regexp according to configuration
+    let PARSE_TEXT_TILL = null;
+
+    if (this.setup.allowDirectHtml)
+    {
+      PARSE_TEXT_TILL = new RegExp('[^\[\n\r\t]*', 'g');
+    }
     else
-      PARSE_TEXT_TILL = new RegExp('[^\[\n\r\t&"\'<>]*', 'g')
+    {
+      PARSE_TEXT_TILL = new RegExp('[^\[\n\r\t&"\'<>]*', 'g');
+    }
 
-    # parse everything that's considered to be text (passed through)
-    PARSE_TEXT_TILL.lastIndex = state.srcIdx
-    regexpResult = PARSE_TEXT_TILL.exec(state.src)
-    if regexpResult? and regexpResult[0].length > 0
-      state.srcIdx += regexpResult[0].length
-      state.out    += regexpResult[0]
-      @htmlData.skipLineBreak = 0
+    // parse everything that's considered to be text (passed through)
+    PARSE_TEXT_TILL.lastIndex = state.srcIdx;
 
+    const regexpResult = PARSE_TEXT_TILL.exec(state.src);
 
-    # look what's next, right after "clean" text and handle it
-    if state.srcIdx < state.src.length
-      c = state.src.charAt(state.srcIdx)
-      switch c
-        when '['
-          ; # do nothing
-        when '\n'
-          # line-breaking depends on previously parsed tags
-          # (for example: no linebreak right after [h1][/])
-          if @htmlData.skipLineBreak == 0
-            if @setup.lbToBrEnabled
-              state.out += '<br>'
+    if (K.Object.isNotNull(regexpResult) && (regexpResult[0].length > 0))
+    {
+      state.srcIdx += regexpResult[0].length;
+      state.out    += regexpResult[0];
+      this.htmlData.skipLineBreak = 0;
+    }
+
+    // look what's next, right after "clean" text and handle it
+    if (state.srcIdx < state.src.length)
+    {
+      const c = state.src.charAt(state.srcIdx);
+
+      switch (c)
+      {
+        case '[':
+        {
+          // do nothing
+          break;
+        }
+
+        case '\n':
+        {
+          // line-breaking depends on previously parsed tags
+          // (for example: no linebreak right after [h1][/])
+          if (this.htmlData.skipLineBreak == 0)
+          {
+            if (this.setup.lbToBrEnabled)
+            {
+              state.out += '<br>';
+            }
+          }
           else
-            @htmlData.skipLineBreak = 0
-          state.srcIdx++
-        when '\r'
-          state.srcIdx++
-        when '<'
-          state.out += '&lt;'
-          state.srcIdx++
-        when '>'
-          state.out += '&gt;'
-          state.srcIdx++
-        when '&'
-          state.out += '&amp;'
-          state.srcIdx++
-        when '"'
-          state.out += '&quot;'
-          state.srcIdx++
-        when "'"
-          state.out += '&#039;'
-          state.srcIdx++
-        else
-          state.srcIdx++
+          {
+            this.htmlData.skipLineBreak = 0
+          }
 
+          state.srcIdx++;
 
-  _parseBB: (state) ->
-    super(state)
+          break;
+        }
 
-    # close unclosed tags
-    while @htmlStack.length > 0
-      @_htmlStack_removeByIdx(state, @htmlStack.length - 1)
+        case '\r':
+        {
+          state.srcIdx++;
 
+          break;
+        }
 
-  parse: (src) ->
-    @_clearHtmlData()
-    return super(src)
+        case '<':
+        {
+          state.out += '&lt;';
+          state.srcIdx++;
 
-exports.BBCodeHtml = K.BBCodeHtml
+          break;
+        }
+
+        case '>':
+        {
+          state.out += '&gt;';
+          state.srcIdx++;
+
+          break;
+        }
+
+        case '&':
+        {
+          state.out += '&amp;';
+          state.srcIdx++;
+
+          break;
+        }
+
+        case '"':
+        {
+          state.out += '&quot;';
+          state.srcIdx++;
+
+          break;
+        }
+
+        case "'":
+        {
+          state.out += '&#039;';
+          state.srcIdx++;
+
+          break;
+        }
+
+        default:
+        {
+          state.srcIdx++;
+        }
+      }
+    }
+  }
+
+  _parseBB(state)
+  {
+    super._parseBB(state);
+
+    // close unclosed tags
+    while (this.htmlStack.length > 0)
+    {
+      this._htmlStack_removeByIdx(state, this.htmlStack.length - 1);
+    }
+  }
+
+  parse(src)
+  {
+    this._clearHtmlData();
+
+    return super.parse(src);
+  }
+}
+
+// Class constants.
+K.BBCodeHtml.DEFAULT_SETUP = {
+  allowDirectHtml: false,
+  innerUrl: '',
+  imgUrl: '',
+  lbToBrEnabled: true,
+  blockOnClickOnInternalLinks: false,
+  passLinkDataOnInternalLinks: false
+};
+
+exports.BBCodeHtml = K.BBCodeHtml;
+
+})(this);
