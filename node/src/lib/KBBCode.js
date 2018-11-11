@@ -44,9 +44,9 @@ K.BBCode = class K_BBCode
 
     for (let idx in args)
     {
-      if (args[id].key == key)
+      if (args[idx].key == key)
       {
-        rv = args[id].value;
+        rv = args[idx].value;
 
         break;
       }
