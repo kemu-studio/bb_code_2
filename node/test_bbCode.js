@@ -9,14 +9,14 @@ if (0)
 {
   global.__pathToKCore = __dirname + './src/libs/KCore.coffee';
   K = require(__pathToKCore);
-  K.requireLib('KBBCode.coffee');
-  K.requireLib('KBBCodeHtml.coffee');
+  K.requireLib('KBBCode');
+  K.requireLib('KBBCodeHtml');
 }
 else
 {
   K = {};
-  K.BBCode     = require('./src/lib/KBBCode.coffee').BBCode;
-  K.BBCodeHtml = require('./src/lib/KBBCodeHtml.coffee').BBCodeHtml;
+  K.BBCode     = require('./src/lib/KBBCode').BBCode;
+  K.BBCodeHtml = require('./src/lib/KBBCodeHtml').BBCodeHtml;
 }
 
 class BBCodeTest extends K.BBCode
