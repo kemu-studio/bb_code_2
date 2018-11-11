@@ -1,5 +1,3 @@
-require('coffeescript/register');
-
 const should = require('should');
 
 let K = null;
