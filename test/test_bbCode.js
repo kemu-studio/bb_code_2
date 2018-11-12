@@ -13,8 +13,8 @@ if (0)
 else
 {
   K = {};
-  K.BBCode     = require('../src/lib/KBBCode').BBCode;
-  K.BBCodeHtml = require('../src/lib/KBBCodeHtml').BBCodeHtml;
+  K.BBCode     = require('../src/KBBCode').BBCode;
+  K.BBCodeHtml = require('../src/KBBCodeHtml').BBCodeHtml;
 }
 
 class BBCodeTest extends K.BBCode
