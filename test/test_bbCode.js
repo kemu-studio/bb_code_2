@@ -1,20 +1,17 @@
-const should = require('should');
+let should;
+let K;
 
-let K = null;
-
-// Use default node.js require-policy, or K-namespace model ?
-if (0)
+if (typeof exports !== "undefined" && exports !== null)
 {
-  global.__pathToKCore = __dirname + './src/libs/KCore.coffee';
-  K = require(__pathToKCore);
-  K.requireLib('KBBCode');
-  K.requireLib('KBBCodeHtml');
+  // Server - load K namespace from npm package.
+  K = require('kcore');
+  require('../src/KBBCodeHtml');
+  should = require('should');
 }
 else
 {
-  K = {};
-  K.BBCode     = require('../src/KBBCode').BBCode;
-  K.BBCodeHtml = require('../src/KBBCodeHtml').BBCodeHtml;
+  // Browser.
+  K = window.K;
 }
 
 class BBCodeTest extends K.BBCode
