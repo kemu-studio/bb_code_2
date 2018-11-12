@@ -5,22 +5,24 @@
   "main": "./src/index",
   "homepage": "http://doc.ke.mu/doc/bb",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test/test_all.js"
   },
   "keywords": [
     "BBCode",
     "BB",
     "kbb"
   ],
-  "repository" :
-  {
-    "type" : "git",
-    "url" : "https://github.com/yosheeck/bb_code_2"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yosheeck/bb_code_2"
   },
-  "main": "./src/index",
   "author": "Yosh Kemu <y@ke.mu> (http://yosh.ke.mu/)",
   "license": "ISC",
   "dependencies": {
     "kcore": ">=0.12.10"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "should": "^13.2.3"
   }
 }
