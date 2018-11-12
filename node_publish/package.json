@@ -1,6 +1,6 @@
 {
   "name": "bb2",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "BB Code 2.0 (aka KBB) - the redefined BB-Code",
   "main": "./src/index",
   "homepage": "http://doc.ke.mu/doc/bb",
@@ -21,6 +21,6 @@
   "author": "Yosh Kemu <y@ke.mu> (http://yosh.ke.mu/)",
   "license": "ISC",
   "dependencies": {
-    "kcore": ">=0.11.5"
+    "kcore": ">=0.12.10"
   }
 }
