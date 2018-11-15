@@ -26,7 +26,7 @@ K.BBCodeHtml = class K_BBCodeHtml extends K.BBCode
 {
   constructor(inSetup = {})
   {
-    setup = {};
+    const setup = {};
     K.Object.merge(setup, K.BBCodeHtml.DEFAULT_SETUP);
     K.Object.merge(setup, inSetup);
     super(setup);
