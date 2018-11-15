@@ -80,7 +80,6 @@ suite('KBBCode', () =>
   {
     const bb = new K.BBCode;
     bb.parse('').should.be.eql('');
-    return null;
   });
 
   test( 'simple strings - not a real BB', () =>
@@ -90,7 +89,6 @@ suite('KBBCode', () =>
     bb.parse('abc').should.be.eql('abc');
     bb.parse('abc ab!').should.be.eql('abc ab!');
     bb.parse('¬~#3').should.be.eql('¬~#3');
-    return null;
   });
 
   test('[[ -> [ conversion - not a real BB yet', () =>
@@ -102,7 +100,6 @@ suite('KBBCode', () =>
     bb.parse('[[x[[x').should.be.eql('[x[x');
     bb.parse('[[x[[x[[[[yy').should.be.eql('[x[x[[yy');
     bb.parse('x ac! [[[[x[[[[[[ [[').should.be.eql('x ac! [[x[[[ [');
-    return null;
   });
 
   test('simple commands - fake command parser class', () =>
@@ -127,7 +124,6 @@ suite('KBBCode', () =>
     bb.clearTestValue();
     bb.parse('[xyz] hafahafa ! [ abcdef]').should.be.eql('[xyz] hafahafa ! [ abcdef]');
     bb.getTestValue().defaultBBCalledCnt.should.be.eql(1);
-    return null;
   });
 
   test('simple commands + [[ in random places', () =>
@@ -147,7 +143,6 @@ suite('KBBCode', () =>
     bb.clearTestValue();
     bb.parse(' [x]abc hgw[[ [y]').should.be.eql(' [x]abc hgw[ [y]');
     bb.getTestValue().defaultBBCalledCnt.should.be.eql(2);
-    return null;
   });
 
   test('simple commands - more advanced cases (like multiple lines)', () =>
@@ -155,7 +150,6 @@ suite('KBBCode', () =>
     const bb = new BBCodeTest();
     bb.parse(' go [to] nowhere\n [with] this \r [test]\r\n').should.be.eql(' go [to] nowhere\n [with] this \r [test]\r\n');
     bb.getTestValue().defaultBBCalledCnt.should.be.eql(3);
-    return null;
   });
 
   test('simple commands - prefixes parsing', () =>
@@ -173,7 +167,6 @@ suite('KBBCode', () =>
     bb.parse(' [-x]abc hgw[[ [+y]').should.be.eql(' [-x]abc hgw[ [+y]');
     bb.getTestValue().defaultBBCalledCnt.should.be.eql(2);
     bb.getTestValue().prefixedCnt.should.be.eql({'-':1, '+':1});
-    return null;
   });
 
   test('commands with some more text inside', () =>
@@ -186,7 +179,6 @@ suite('KBBCode', () =>
     bb.parse('[x="z"][y asd+ ni="x"][\\x][-y]').should.be.eql('[x="z"][y asd+ ni="x"][\\x][-y]');
     bb.getTestValue().defaultBBCalledCnt.should.be.eql(4);
     bb.getTestValue().prefixedCnt.should.be.eql({'\\':1, '-':1});
-    return null;
   });
 
   test('command parameters parser: command + whitespace', () =>
@@ -197,7 +189,6 @@ suite('KBBCode', () =>
     bb.getTestValue().tags.length.should.be.eql(1);
     bb.getTestValue().tags[0].command.should.be.eql('open');
     bb.getTestValue().tags[0].args.should.be.eql([]);
-    return null;
   });
 
   test('command parameters parser: commands + simple words as command arguments', () =>
@@ -207,7 +198,6 @@ suite('KBBCode', () =>
     bb.getTestValue().tags.length.should.be.eql(1);
     bb.getTestValue().tags[0].command.should.be.eql('open');
     bb.getTestValue().tags[0].args.should.be.eql([{key:'aA', value:null}, {key:'bcd', value:null}]);
-    return null;
   });
 
   test('command parameters parser: commands + real params', () =>
@@ -223,7 +213,6 @@ suite('KBBCode', () =>
     bb.getTestValue().tags.length.should.be.eql(1);
     bb.getTestValue().tags[0].command.should.be.eql('open');
     bb.getTestValue().tags[0].args.should.be.eql([{key:'aa', value:"abc"}, {key:'bb', value:'xx'}]);
-    return null;
   });
 
   test('command parameters parser: commands + params with quotes', () =>
@@ -241,7 +230,6 @@ suite('KBBCode', () =>
     bb.getTestValue().tags[0].args.should.be.eql([{key:'aa', value:"zx'y"}, {key:'b_b', value:'abc bah "boom'}]);
     bb.getTestValue().tags[1].command.should.be.eql('open');
     bb.getTestValue().tags[1].args.should.be.eql([{key:'key', value:"va'lue"}]);
-    return null;
   });
 
   test('command parameters parser: commands + params with quotes inside quotes', () =>
@@ -257,7 +245,6 @@ suite('KBBCode', () =>
     bb.getTestValue().tags.length.should.be.eql(1);
     bb.getTestValue().tags[0].command.should.be.eql('open');
     bb.getTestValue().tags[0].args.should.be.eql([{key:'aa', value:"zx\"y"},{key:'cde', value:"x'y"}]);
-    return null;
   });
 
   test('syntax error: tag + illegal character', () =>
@@ -265,7 +252,6 @@ suite('KBBCode', () =>
     const bb = new BBCodeTest();
     bb.parse('ala [open !').should.be.eql('ala [open ');
     bb.getTestValue().tags.length.should.be.eql(1);
-    return null;
   });
 
   test('syntax error: never closed the bracket', () =>
@@ -285,14 +271,12 @@ suite('KBBCode', () =>
     bb.parse("ala [open x='").should.be.eql("ala [open x='");
     bb.parse("ala [open x=''").should.be.eql("ala [open x=''");
     bb.parse("ala [open x='' y=''''").should.be.eql("ala [open x='' y=''''");
-    return null;
   });
 
   test('syntax error: no key, just quoted value', () =>
   {
     const bb = new BBCodeTest();
     bb.parse("[open 'abc bah boom'] x").should.be.eql('[open ');
-    return null;
   });
 
   test('BB native command: [0]skip me[1]', () =>
@@ -304,7 +288,6 @@ suite('KBBCode', () =>
     bb.parse('a[0]n').should.be.eql('a');
     bb.parse('a[0]n[0]b[1]c[0]x').should.be.eql('ac');
     bb.parse('1\n[0]\n\n[1]\n2').should.be.eql('1\n2');
-    return null;
   });
 });
 
@@ -315,7 +298,6 @@ suite('KBBCodeHtml', () =>
     const bb = new K.BBCodeHtml();
     bb.parse('').should.be.eql('');
     bb.parse('abc').should.be.eql('abc');
-    return null;
   });
 
   test('bb-html: [b][i][u] mess', () =>
@@ -332,7 +314,6 @@ suite('KBBCodeHtml', () =>
     bb.parse('abc[b][i]xy[/b ][/i]').should.be.eql('abc<b><i>xy</i></b><i></i>');
     bb.parse('abc[b][u][i]ble[/b][/i]x[/u]').should.be.eql('abc<b><u><i>ble</i></u></b><u><i></i>x</u>');
     bb.parse('abc[b]what[/b][/b][/b]').should.be.eql('abc<b>what</b>');
-    return null;
   });
 
   test('bb-html: anonymous close [/]', () =>
@@ -342,7 +323,6 @@ suite('KBBCodeHtml', () =>
     bb.parse('abc[b]x[/]').should.be.eql('abc<b>x</b>');
     bb.parse('abc[b][i]x[/]y[/]z').should.be.eql('abc<b><i>x</i>y</b>z');
     bb.parse('abc[b][i]x[/]y[i]z[/]f[/]a').should.be.eql('abc<b><i>x</i>y<i>z</i>f</b>a');
-    return null;
   });
 
   test('bb-html: unhandled non-tags [/]', () =>
@@ -351,7 +331,6 @@ suite('KBBCodeHtml', () =>
     bb.THROW_EXCEPTIONS = true;
     bb.parse('abc[x]y').should.be.eql('abc[x]y');
     bb.parse('abc[x]y[/]').should.be.eql('abc[x]y');
-    return null;
   });
 
   test('bb-html: simple tag [h]', () =>
@@ -364,7 +343,6 @@ suite('KBBCodeHtml', () =>
     bb.parse('abc[h4]x[/]').should.be.eql('abc<h4>x</h4>');
     bb.parse('abc[h5]x[/h1]').should.be.eql('abc<h5>x</h5>');
     bb.parse('abc[h6]x[/]').should.be.eql('abc<h6>x</h6>');
-    return null;
   });
 
   test('bb-html: simple tag [p]', () =>
@@ -374,7 +352,6 @@ suite('KBBCodeHtml', () =>
     bb.parse('abc[p]x[/p]').should.be.eql('abc<p>x</p>');
     bb.parse('abc[p]x[/]').should.be.eql('abc<p>x</p>');
     bb.parse('abc[p]xa[/p]xb[p]xc[/]').should.be.eql('abc<p>xa</p>xb<p>xc</p>');
-    return null;
   });
 
   test('bb-html: simple tag [sub]', () =>
@@ -384,7 +361,6 @@ suite('KBBCodeHtml', () =>
     bb.parse('abc[sub]x[/sub]').should.be.eql('abc<sub>x</sub>');
     bb.parse('abc[sub]x[/]').should.be.eql('abc<sub>x</sub>');
     bb.parse('abc[sub]xa[/sub]xb[sub]xc[/]').should.be.eql('abc<sub>xa</sub>xb<sub>xc</sub>');
-    return null;
   });
 
   test('bb-html: simple tag [sup]', () =>
@@ -394,7 +370,6 @@ suite('KBBCodeHtml', () =>
     bb.parse('abc[sup]x[/sup]').should.be.eql('abc<sup>x</sup>');
     bb.parse('abc[sup]x[/]').should.be.eql('abc<sup>x</sup>');
     bb.parse('abc[sup]xa[/sup]xb[sup]xc[/]').should.be.eql('abc<sup>xa</sup>xb<sup>xc</sup>');
-    return null;
   });
 
   test('bb-html: special characters in allowDirectHtml == false', () =>
@@ -409,7 +384,6 @@ suite('KBBCodeHtml', () =>
     bb.parse('"').should.be.eql('&quot;');
     bb.parse(' &" ').should.be.eql(' &amp;&quot; ');
     bb.parse('<a href="http://ke.mu">xxx</a>').should.be.eql('&lt;a href=&quot;http://ke.mu&quot;&gt;xxx&lt;/a&gt;');
-    return null;
   });
 
   test('bb-html: special characters in allowDirectHtml == true', () =>
@@ -423,7 +397,6 @@ suite('KBBCodeHtml', () =>
     bb.parse("'").should.be.eql("'");
     bb.parse('"').should.be.eql('"');
     bb.parse('<a href="http://ke.mu">xxx</a>').should.be.eql('<a href="http://ke.mu">xxx</a>');
-    return null;
   });
 
   test('bb-html: lists', () =>
@@ -438,7 +411,6 @@ suite('KBBCodeHtml', () =>
     bb.parse('[ul][li]x[/li][li]y[/li][li]z[/li][/ul]').should.be.eql('<ul><li>x</li><li>y</li><li>z</li></ul>');
     bb.parse('[ul][li]x[li]y[li]z[/ul]').should.be.eql('<ul><li>x</li><li>y</li><li>z</li></ul>');
     bb.parse('[li]x[li]y[li]z[/ul]').should.be.eql('<ul><li>x</li><li>y</li><li>z</li></ul>');
-    return null;
   });
 
   test('bb-html: lists - multi-level (lists inside lists)', () =>
@@ -454,7 +426,6 @@ suite('KBBCodeHtml', () =>
     bb.parse('[li]1[li]2[ul][li]2.1[li]2.2[/ul]aa[/ul]bb').should.be.eql('<ul><li>1</li><li>2<ul><li>2.1</li><li>2.2</li></ul>aa</li></ul>bb');
     bb.parse('[li]1[/li][li]2[/li][ul][li]2.1[/li][li]2.2[/li][/ul]aa[/ul]bb').should.be.eql('<ul><li>1</li><li>2<ul><li>2.1</li><li>2.2</li></ul>aa</li></ul>bb');
     bb.parse('[ul][li]1[/li][li]2[/li][ul][li]2.1[/li][li]2.2[/li][/ul]aa[/li][/ul]bb').should.be.eql('<ul><li>1</li><li>2<ul><li>2.1</li><li>2.2</li></ul>aa</li></ul>bb');
-    return null;
   });
 
   test('bb-html: line break handling - simple cases', () =>
@@ -464,7 +435,6 @@ suite('KBBCodeHtml', () =>
     bb.parse('\n').should.be.eql('<br>');
     bb.parse('\r').should.be.eql('');
     bb.parse('This \n text is \nline-breaked.').should.be.eql('This <br> text is <br>line-breaked.');
-    return null;
   });
 
   test('bb-html: line break handling - cancel line-break after closing line-breaking tags (like headers, lists, etc.)', () =>
@@ -475,7 +445,6 @@ suite('KBBCodeHtml', () =>
     bb.parse('This \n[h1]text is[/]\n\nline-breaked.').should.be.eql('This <br><h1>text is</h1><br>line-breaked.');
     bb.parse('This \n[h1]text is[/]x\n\nline-breaked.').should.be.eql('This <br><h1>text is</h1>x<br><br>line-breaked.');
     bb.parse('This \n[ul]\n[li]line-breaked\nitem[/].').should.be.eql('This <br><ul><li>line-breaked<br>item</li></ul>.');
-    return null;
   });
 
   test('bb-html: links', () =>
@@ -493,7 +462,6 @@ suite('KBBCodeHtml', () =>
 
     // https support
     bb.parse('[link url="https://www.npmjs.com/package/bb2"][/]').should.be.eql('<a href="https://www.npmjs.com/package/bb2">https://www.npmjs.com/package/bb2</a>');
-    return null;
   });
 
   test('bb-html: internal links', () =>
@@ -504,7 +472,6 @@ suite('KBBCodeHtml', () =>
     bb.parse('[linkin url=the_page]The internal page[/]').should.be.eql('<a href="http://ke.mu/the_page">The internal page</a>');
     bb.parse('[linkin url=the_page][/]').should.be.eql('<a href="http://ke.mu/the_page">the_page</a>');
     bb.parse('[linkin url=the_page]').should.be.eql('<a href="http://ke.mu/the_page">the_page</a>');
-    return null;
   });
 
   test('bb-html: target', () =>
@@ -512,7 +479,6 @@ suite('KBBCodeHtml', () =>
     const bb = new K.BBCodeHtml();
     bb.THROW_EXCEPTIONS = true;
     bb.parse('The text [target id=thePlaceToJump] and more text.').should.be.eql('The text <a name="thePlaceToJump"></a> and more text.');
-    return null;
   });
 
   test('bb-html: image', () =>
@@ -522,7 +488,6 @@ suite('KBBCodeHtml', () =>
     bb.parse('The text [img src="the_img.jpg"] and more text.').should.be.eql('The text <img src="http://ke.mu/g/the_img.jpg"/> and more text.');
     bb.parse('[img src="the_img.jpg" class="xxx" alt="yyy"]').should.be.eql('<img src="http://ke.mu/g/the_img.jpg" class="xxx" alt="yyy"/>');
     bb.parse('The [img]the_img.png[/] image.').should.be.eql('The <img src="http://ke.mu/g/the_img.png"/> image.');
-    return null;
   });
 
   test('bb-html: generic parameters support: parameter class', () =>
@@ -532,7 +497,6 @@ suite('KBBCodeHtml', () =>
 
     bb.parse('[img class=abc src="the_img.jpg"]').should.be.eql('<img src="http://ke.mu/g/the_img.jpg" class="abc"/>');
     bb.parse('[h1 class=abc]xyz[/]').should.be.eql('<h1 class="abc">xyz</h1>');
-    return null;
   });
 
   test('bb-html: generic parameters support: parameter id', () =>
@@ -544,6 +508,5 @@ suite('KBBCodeHtml', () =>
     bb.parse('[img class=abc id=xxx src="the_img.jpg"]').should.be.eql('<img src="http://ke.mu/g/the_img.jpg" class="abc" id="xxx"/>');
 
     bb.parse('').should.be.eql('');
-    return null;
   });
 });
