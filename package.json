@@ -22,7 +22,10 @@
     "kcore": ">=0.12.10"
   },
   "devDependencies": {
+    "fs-extra": "^7.0.1",
+    "glob": "^7.1.3",
     "mocha": "^5.2.0",
+    "path": "^0.12.7",
     "should": "^13.2.3"
   }
 }
