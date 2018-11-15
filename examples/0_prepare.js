@@ -27,4 +27,4 @@ console.log('Copying [ package.json ]...')
 fs.copySync('../package.json', './node_modules/bb2/package.json')
 
 // Success!
-console.log('Done! Now You can run one of \'example_xxx.js\' script and see KBB2 in action!')
+console.log('Done! Now You can run one of \'example_xxx.js\' script and see BB Code 2.0 in action!')
