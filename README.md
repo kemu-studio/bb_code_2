@@ -1,3 +1,5 @@
+[![NPM version](http://img.shields.io/npm/v/bb2.svg?style=flat)](https://npmjs.org/package/bb2)
+
 This is JavaScript implementation of BBCode 2.0.
 
 # What's BB Code 2.0 (aka KBB)
@@ -9,7 +11,7 @@ It is alternative to other markup languages:
 * it's more structural, extendable and verbose than [markdown](https://en.wikipedia.org/wiki/Markdown)
 * less structural and verbose than HTML
 
-Therefore, the main use is for professional users: it's convenient, extendable definition of content for server and browser side rich-texts, which can be rendered to HTML and SVG, as HTML-text or directly into DOM.
+Therefore, the main use is for professional users: it's markup language and rich-text content description for server and browser, which can be rendered to HTML and SVG, as tags/text or directly into DOM.
 
 # Examples
 ## Auto close
@@ -67,7 +69,7 @@ console.log(bb.parse('visible [0]invisible[1] [b]bold[/] [i]italic[/] [u]underli
 ```
 ## Examples
 Look into /examples folder.
-To run examples, first do
+To run examples, run this *ONCE*:
 ```
 cd examples
 node 0_prepare.js
@@ -92,3 +94,9 @@ We also implemented bb2 in PHP for our older projects, but we never had time to 
 - **more functional approach** - current one is OOP classes with inheritance, we will rewrite it to more functional approach, to allow easier composition, like adding specific bb-tags without need of class-extend
 - **move rendering from text based to Nate based** - instead of building big HTML-strings, we'll use [Nate](https://www.npmjs.com/package/knate) to allow Universal building: direct DOM in the browser and HTML on server-side
 - **smart-table tags** - smart creation of tables
+
+# Authors
+* Roman Pietrzak aka yosh - Architecture, Code, Tests, Documentation
+* Sylwester Wysocki aka dzik - Code, Tests, Examples
+
+This project is sponsored by [Kemu Studio](http://ke.mu) and used as main rich-text engine in [Calculla](http://calculla.com).
