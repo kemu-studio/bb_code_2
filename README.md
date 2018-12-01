@@ -1,16 +1,15 @@
 This is JavaScript implementation of BBCode 2.0.
 
 # What's BB Code 2.0 (aka KBB)
-**BBCode** is a lightweight markup language, introduced in 1998. It is base markup for phpBB forum system and vBulletin. Read more [about on BBCode wiki](https://en.wikipedia.org/wiki/BBCode)
+**BBCode** is a lightweight markup language, introduced in 1998. It is base markup for phpBB forum system and vBulletin. Read more [about BBCode on wikipedia](https://en.wikipedia.org/wiki/BBCode)
 
-**BBCode 2.0** is a new modern redefinition of BBCode.
-It introduces smart closures, relaxes tags structure, simplifies extensions.
+**BBCode 2.0** is a new modern redefinition of BBCode. It introduces smart closing of tags, relaxes tags structure, introduces number of extensions and simplifies adding custom extensions.
 
-It is alternative to other markups.
+It is alternative to other markup languages:
 * it's more structural, extendable and verbose than [markdown](https://en.wikipedia.org/wiki/Markdown)
 * less structural and verbose than HTML
 
-Therefore its main use is professional - as convenient, extendable definition of content for server and browser side rich-texts, before rendering to HTML or DOM.
+Therefore, the main use is for professional users: it's convenient, extendable definition of content for server and browser side rich-texts, which can be rendered to HTML and SVG, as HTML-text or directly into DOM.
 
 # Examples
 ## Auto close
