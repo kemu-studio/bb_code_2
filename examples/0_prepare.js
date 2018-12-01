@@ -63,5 +63,5 @@ exampleFiles.forEach((item) => {
 //
 
 console.log('')
-console.log('Done! Now You can *RUN* one of \'example_xxx.js\' script and see BB Code 2.0 in action!')
-console.log('Alternatively, you can open the \'gallery.html\' file in your browser and *SEE* what BB Code 2.0 can do for you.')
+console.log('Done! Now You can *RUN* one of \'example_xxx.js\' scripts and see BB Code 2.0 in action!')
+console.log('Alternatively, open the \'gallery.html\' file in your browser and *SEE* what BB Code 2.0 can do for you.')
