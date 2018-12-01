@@ -1,3 +1,10 @@
+# 1.3.0
+* Released 20181201
+* REWRITTEN to JavaScript ES6
+    * all CoffeeScript dependency is now gone
+    * tests and examples are ES6 too
+* NEW: Set of 8 examples added
+
 # 1.2.3
   Released 20181110
   - FIX: problem with compilation under coffeescript 2
