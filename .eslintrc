@@ -1,0 +1,35 @@
+{
+  "extends": "eslint:recommended",
+  "rules": {
+    "semi": ["error", "never"],
+    "quotes": ["error", "single"],
+    "no-console": "off",
+    "indent": ["error", 2],
+    "no-unexpected-multiline": "off",
+    "no-tabs": ["error"],
+    "one-var-declaration-per-line": ["error"],
+    "space-infix-ops": ["error"],
+    "space-unary-ops": ["error"],
+    "spaced-comment": ["error"],
+    "switch-colon-spacing": ["error", {"after": true, "before": false}],
+    "unicode-bom": ["error", "never"],
+    "no-var": ["error"],
+    "no-unused-vars": ["error", { "args": "none" }],
+    "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 1}],
+    "no-constant-condition": ["off"],
+    "no-fallthrough": ["off"],
+    "brace-style": ["error", "stroustrup"]
+  },
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "globals": {
+    "console": true,
+    "global": true,
+    "require": true,
+    "__dirname": true,
+    "exports": true,
+    "window": true,
+    "document": true
+  }
+}
