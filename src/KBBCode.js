@@ -60,7 +60,7 @@
     }
 
     _argsPack(args) {
-      rv = {}
+      let rv = {}
 
       for (let idx in args) {
         const arg = args[idx]

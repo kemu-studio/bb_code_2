@@ -1,3 +1,7 @@
+# 1.3.2
+* Released 20190130
+* FIX: crash in node.js (strict mode) because of missing "let" in K.BBCode::_argsPack()
+
 # 1.3.1
 * Released 20190130
 * FIX: implemented handling of a case, when passed input is not a string
