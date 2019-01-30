@@ -353,7 +353,7 @@
         const theState = {
           src:    src,
           srcIdx: 0,
-         out:    '',
+          out:    '',
           failureMark: '' // a copy of currently parsed tag, up to the point it failed
         }
 
