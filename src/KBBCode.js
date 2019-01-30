@@ -348,7 +348,7 @@
     parse(src) {
       let rv = null
 
-      if ((src instanceof String) || (typeof src === 'string')) {
+      if (K.Object.isString(src)) {
         // Go on only if input source is string.
         const theState = {
           src:    src,
