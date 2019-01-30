@@ -71,6 +71,19 @@ suite('KBBCode', () => {
     bb.parse('').should.be.eql('')
   })
 
+  test( 'bad input (non-string)', () => {
+    const bb = new K.BBCode();
+    const x  = [];
+
+    (bb.parse(null) === null).should.be.eql(true);
+    (bb.parse(x[0]) === null).should.be.eql(true); // Pass undefined
+    (bb.parse(1)    === null).should.be.eql(true);
+    (bb.parse(3.14) === null).should.be.eql(true);
+    (bb.parse([])   === null).should.be.eql(true);
+    (bb.parse({})   === null).should.be.eql(true);
+    (bb.parse(true) === null).should.be.eql(true);
+  })
+
   test( 'simple strings - not a real BB', () => {
     const bb = new K.BBCode()
     bb.parse('x').should.be.eql('x')
