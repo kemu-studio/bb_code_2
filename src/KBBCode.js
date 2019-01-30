@@ -346,26 +346,33 @@
     }
 
     parse(src) {
-      const theState = {
-        src:    src,
-        srcIdx: 0,
-        out:    '',
-        failureMark: '' // a copy of currently parsed tag, up to the point it failed
-      }
+      let rv = null
 
-      if (this.THROW_EXCEPTIONS) {
-        this._parseBB(theState)
-      }
-      else {
-        try {
+      if (K.Object.isString(src)) {
+        // Go on only if input source is string.
+        const theState = {
+          src:    src,
+          srcIdx: 0,
+         out:    '',
+          failureMark: '' // a copy of currently parsed tag, up to the point it failed
+        }
+
+        if (this.THROW_EXCEPTIONS) {
           this._parseBB(theState)
         }
-        catch (error) {
-          // nothing to do here
+        else {
+          try {
+            this._parseBB(theState)
+          }
+          catch (error) {
+            // nothing to do here
+          }
         }
+
+        rv = theState.out + theState.failureMark
       }
 
-      return theState.out + theState.failureMark
+      return rv
     }
   }
 
