@@ -90,10 +90,11 @@ This is implementation of **bb2 in JavaScript** for node.js and browsers use.
 We also implemented bb2 in PHP for our older projects, but we never had time to publish it - contact us if you're interested.
 
 # Roadmap
-- [DONE] **get rid of Coffeescript dependency** - full rewrite to ES6 completed
-- **more functional approach** - current one is OOP classes with inheritance, we will rewrite it to more functional approach, to allow easier composition, like adding specific bb-tags without need of class-extend
-- **move rendering from text based to Nate based** - instead of building big HTML-strings, we'll use [Nate](https://www.npmjs.com/package/knate) to allow Universal building: direct DOM in the browser and HTML on server-side
-- **smart-table tags** - smart creation of tables
+- [x] **remove Coffeescript dependency** - full rewrite to ES6 completed
+- [ ] **more functional approach** - current one is OOP classes with inheritance. We will rewrite it to functional approach, to allow easier composition, like adding specific bb-tags without need of class-extend
+- [ ] **separate parsing from rendering** - currently parsing code and rendering code are closely coupled. We'll separate them to 2 functional blocks: parsing (to AST) and rendering (from AST)
+- [ ] **move rendering from text based to Nate based** - instead of building big HTML-strings, we'll use [Nate](https://www.npmjs.com/package/knate) to allow Universal building: direct DOM in the browser, HTML on server-side, LaTeX when needed, even SVG if possible
+- [ ] **smart-table tags** - smart creation of tables
 
 # Authors
 * Roman Pietrzak aka yosh - Architecture, Code, Tests, Documentation
