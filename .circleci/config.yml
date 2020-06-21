@@ -11,7 +11,40 @@ jobs:
           steps:
             - run: npm install
             - run: npm test
+  deploy:
+    executor:
+      name: node/default
+
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish
+
 workflows:
-    build-and-test:
-      jobs:
-        - build-and-test
+  build-and-test:
+    jobs:
+      - build-and-test
+
+  test-deploy:
+    jobs:
+      - build-and-test
+      - deploy:
+          requires:
+            # Run build-and-test job before go on.
+            - build-and-test
+
+          filters:
+            branches:
+              ignore: /.*/
+
+            # Make sure the deploy job runs *ONLY* when a commit has been tagged with a
+            # version number and pushed.
+            # https://circleci.com/blog/publishing-npm-packages-using-circleci-2-0/
+            tags:
+              # x.y.z version is expected.
+              only: /^\d+\.\d+\.d+/
