@@ -1,4 +1,8 @@
 [![NPM version](http://img.shields.io/npm/v/bb2.svg?style=flat)](https://npmjs.org/package/bb2)
+[![Git Commit](https://img.shields.io/github/last-commit/yosheeck/bb_code_2.svg?style=flat)](https://github.com/yosheeck/bb_code_2/commits/master)
+[![Git Releases](https://img.shields.io/github/release/yosheeck/bb_code_2.svg?style=flat)](https://github.com/yosheeck/bb_code_2/releases)
+[![Docker pulls](https://img.shields.io/docker/pulls/yosheeck/bb_code_2.svg?style=flat)](https://hub.docker.com/r/yosheeck/bb_code_2)
+[![CircleCI](https://circleci.com/gh/yosheeck/bb_code_2.svg?style=svg)](https://app.circleci.com/pipelines/github/yosheeck/bb_code_2)
 
 This is JavaScript implementation of BBCode 2.0.
 
@@ -57,7 +61,7 @@ More examples in /examples folder and at [full BB2 documentation](http://doc.ke.
     npm install bb2
 
 ## Run tests
-    
+
     npm test
 
 ## Usage
@@ -75,7 +79,7 @@ cd examples
 node 0_prepare.js
 ```
 This:
-- prepares the folder structure as to pretend that's a real project. 
+- prepares the folder structure as to pretend that's a real project.
 - creates the **gallery.html** file, which contains all the results from - just open that in the browser
 
 After prepare, you can hit any of example_*.js like that:
