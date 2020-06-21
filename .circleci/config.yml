@@ -31,20 +31,20 @@ workflows:
       - build-and-test
 
   test-deploy:
-    requires:
-      # Run build-and-test job before go on.
-      - build-and-test
-
-    filters:
-      branches:
-        ignore: /.*/
-
-      # Make sure the deploy job runs *ONLY* when a commit has been tagged with a
-      # version number and pushed.
-      # https://circleci.com/blog/publishing-npm-packages-using-circleci-2-0/
-      tags:
-        # x.y.z version is expected.
-        only: /^\d+\.\d+\.d+/
-
     jobs:
-      - deploy
+      - build-and-test
+      - deploy:
+          requires:
+            # Run build-and-test job before go on.
+            - build-and-test
+
+          filters:
+            branches:
+              ignore: /.*/
+
+            # Make sure the deploy job runs *ONLY* when a commit has been tagged with a
+            # version number and pushed.
+            # https://circleci.com/blog/publishing-npm-packages-using-circleci-2-0/
+            tags:
+              # x.y.z version is expected.
+              only: /^\d+\.\d+\.d+/
