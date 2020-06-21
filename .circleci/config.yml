@@ -47,4 +47,4 @@ workflows:
             # https://circleci.com/blog/publishing-npm-packages-using-circleci-2-0/
             tags:
               # x.y.z version is expected.
-              only: /^\d+\.\d+\.d+/
+              only: /^\d+\.\d+\.\d+/
