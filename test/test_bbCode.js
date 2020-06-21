@@ -2,7 +2,7 @@
 /* global suite */
 
 let K = null
-
+sdfsdfsdf
 if (typeof exports !== 'undefined' && exports !== null) {
   // Server - load K namespace from npm package.
   K = require('kcore')
