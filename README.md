@@ -1,8 +1,8 @@
 [![NPM version](http://img.shields.io/npm/v/bb2.svg?style=flat)](https://npmjs.org/package/bb2)
 [![Git Commit](https://img.shields.io/github/last-commit/yosheeck/bb_code_2.svg?style=flat)](https://github.com/yosheeck/bb_code_2/commits/master)
 [![Git Releases](https://img.shields.io/github/release/yosheeck/bb_code_2.svg?style=flat)](https://github.com/yosheeck/bb_code_2/releases)
-[![Docker pulls](https://img.shields.io/docker/pulls/yosheeck/bb_code_2.svg?style=flat)](https://hub.docker.com/r/yosheeck/bb_code_2)
 [![CircleCI](https://circleci.com/gh/yosheeck/bb_code_2.svg?style=svg)](https://app.circleci.com/pipelines/github/yosheeck/bb_code_2)
+<!-- [![Docker pulls](https://img.shields.io/docker/pulls/yosheeck/bb_code_2.svg?style=flat)](https://hub.docker.com/r/yosheeck/bb_code_2) -->
 
 This is JavaScript implementation of BBCode 2.0.
 
