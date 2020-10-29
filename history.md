@@ -1,3 +1,6 @@
+# 1.4.0
+* Updated dependencies
+
 # 1.3.3 - 1.3.5
 * No changes in library.
 * Those are changes in CI, github configs, readme-s etc.

@@ -5,7 +5,7 @@
 
   if (typeof exports !== 'undefined' && exports !== null) {
   // Server - load K namespace from npm package.
-    K = require('kcore')
+    K = require('@kmu/kcore')
     require('./KBBCode')
   }
   else {
