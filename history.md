@@ -1,3 +1,7 @@
+# 1.3.3 - 1.3.5
+* No changes in library.
+* Those are changes in CI, github configs, readme-s etc.
+
 # 1.3.2
 * Released 20190130
 * FIX: crash in node.js (strict mode) because of missing "let" in K.BBCode::_argsPack()
